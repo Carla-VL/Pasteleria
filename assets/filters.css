@@ -9,3 +9,18 @@ body{
     background-color: #FFF5E1;
 }
 
+.col-md-8{
+      background-color: #FFF5E1;
+}
+
+.Button-carrito{
+
+  text-align: right;
+  color: #5d4037;
+}
+
+.Button-help{
+
+  text-align: end;
+  color: #5d4037;
+}
