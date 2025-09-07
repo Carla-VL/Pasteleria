@@ -61,3 +61,9 @@ body{
   flex-wrap: wrap;    /* se apilan si no cabe */
   gap: 0.9rem;       /* espacio entre tarjetas */
 }
+
+.card-img-top{
+  width:100%;
+  aspect-ratio:4/3;                  /* o 1/1 si las quieres cuadradas */
+  object-fit:cover;
+}
