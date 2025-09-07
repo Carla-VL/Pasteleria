@@ -3,65 +3,91 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Registro</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
     <link rel="stylesheet" href="assets/filters.css">
 </head>
 <body>
-    
+    <h1 class="Registrotitulo">Registro</h1>
 
-<div class="d-flex justify-content-center" style="width: 50%; ">
+<div class="d-flex justify-content-center" style="width: 50%; margin: auto; padding-top: 50px;">
     <form class="row g-3 needs-validation" novalidate>
     <div class="col-md-4 position-relative">
-        <label for="validationTooltip01" class="form-label">First name</label>
+        <label for="validationTooltip01" class="form-label">Nombre</label>
         <input type="text" class="form-control" id="validationTooltip01" value="Mark" required>
         <div class="valid-tooltip">
         Looks good!
         </div>
     </div>
     <div class="col-md-4 position-relative">
-        <label for="validationTooltip02" class="form-label">Last name</label>
+        <label for="validationTooltip02" class="form-label">Apellido</label>
         <input type="text" class="form-control" id="validationTooltip02" value="Otto" required>
         <div class="valid-tooltip">
         Looks good!
         </div>
     </div>
     <div class="col-md-4 position-relative">
-        <label for="validationTooltipUsername" class="form-label">Username</label>
+        <label for="validationTooltipUsername" class="form-label">Usuario</label>
         <div class="input-group has-validation">
         <span class="input-group-text" id="validationTooltipUsernamePrepend">@</span>
         <input type="text" class="form-control" id="validationTooltipUsername" aria-describedby="validationTooltipUsernamePrepend" required>
         <div class="invalid-tooltip">
-            Please choose a unique and valid username.
+            Porfavor ingrese un usuario válido.
         </div>
         </div>
     </div>
     <div class="col-md-6 position-relative">
-        <label for="validationTooltip03" class="form-label">City</label>
+        <label for="validationTooltip03" class="form-label">Correo Electronico</label>
         <input type="text" class="form-control" id="validationTooltip03" required>
         <div class="invalid-tooltip">
-        Please provide a valid city.
+        Porfavor ingrese un correo válido.
         </div>
-    </div>
-    <div class="col-md-3 position-relative">
-        <label for="validationTooltip04" class="form-label">State</label>
+
+          <div class="col-md-3 position-relative" style="width: auto;">
+        <label for="validationTooltip04" class="form-label">Region</label>
         <select class="form-select" id="validationTooltip04" required>
-        <option selected disabled value="">Choose...</option>
-        <option>...</option>
+        <option selected disabled value="">Seleccione Region</option>
+        <option value="1">Región de Arica y Parinacota</option>
+        <option value="2">Región de Tarapacá </option>
+        <option value="3">Región de Antofagasta</option>
+        <option value="4">Región de Atacama</option>
+        <option value="5">Región de Coquimbo</option>
+        <option value="6">Región de Valparaíso</option>
+        <option value="7">Región Metropolitana de Santiago</option>
+        <option value="8">Región del Libertador General Bernardo O'Higgins</option>
+        <option value="9">Región del Maule</option>
+        <option value="10">Región de Ñuble</option>
+        <option value="11">Región del Biobío</option>
+        <option value="12">Región de La Araucanía</option>
+        <option value="13">Región de Los Ríos</option>
+        <option value="14">Región de Los Lagos</option>
+        <option value="15">Región de Aysén del General Carlos Ibáñez del Campo</option>
+        <option value="16">Región de Magallanes y la Antártica Chilena</option>
+    
+        </option>
         </select>
         <div class="invalid-tooltip">
-        Please select a valid state.
+        Porfavor seleccione una region.
+        </div>
+
+       <div class="col-md-6 position-relative">
+        <label for="validationTooltip03" class="form-label">Ciudad</label>
+        <input type="text" class="form-control" id="validationTooltip03" required>
+        <div class="invalid-tooltip">
+        Porfavor ingrese una ciudad válida.
         </div>
     </div>
+  
+    </div>
     <div class="col-md-3 position-relative">
-        <label for="validationTooltip05" class="form-label">Zip</label>
+        <label for="validationTooltip05" class="form-label">Codigo Postal</label>
         <input type="text" class="form-control" id="validationTooltip05" required>
         <div class="invalid-tooltip">
-        Please provide a valid zip.
+        Porfavor ingrese Codigo Postal Válido.
         </div>
     </div>
     <div class="col-12">
-        <button class="btn btn-primary" type="submit">Submit form</button>
+        <button class="btn btn-primary" type="submit"  style="background-color: #5d4037; border-color: #5d4037;" >Enviar</button>
     </div>
     </form>
 </div>
