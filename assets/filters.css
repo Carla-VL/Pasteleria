@@ -43,6 +43,14 @@ body{
   color: #5d4037;
 }
 
-
-
+.row-g-0{
+  background-color: #FFF5E1;
+  display: flex;
+}
+.card-text{
+  font-family: 'Lato', sans-serif;
+  font-weight: 21%;
+  font-style: normal;
+  color: #5d4037;;
+}
 
