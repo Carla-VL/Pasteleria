@@ -9,6 +9,7 @@
 </head>
 
 
+
 <body>
 <h1 class="titulo">Pasteleria Mil Sabores</h1>
 <nav class="navbar navbar-expand-lg bg-custom">
@@ -64,28 +65,30 @@
 <h1 class="Principal">Principal</h1>
 
 <div class="cards">
-  <div class="card m-4" style="width: 18rem;">
+  <div class="card m-4" style="width: 18rem;" data-precio="50000">
     <img src="https://i.pinimg.com/736x/45/74/4a/45744a8f0d9be5fe312c692426960c5d.jpg" class="card-img-top" alt="torta de frutas" height="340px">
     <div class="card-body">
       <h5 class="card-title">Torta Cuadrada de Frutas</h5>
       <p class="card-text"> Deliciosa torta de chocolate con capas de ganache 
         <br>y un toque de avellanas personalizable con mensajes especiales. </p>
+        <p class="precio fw-bold">Precio: $50.000 CLP </p>
       <a href="#" class="btn btn-primary" style="background-color: #5d4037; border-color: #5d4037;">Agregar al carrito</a>
     </div>
   </div>
 
 
-  <div class="card m-4" style="width: 18rem;">
+  <div class="card m-4" style="width: 18rem;" data-precio="45000">
     <img src="https://i.pinimg.com/1200x/22/b5/11/22b511a40455afba820addadb82d37dc.jpg" class="card-img-top" alt="torta" height="340px">
     <div class="card-body">
       <h5 class="card-title">Torta Cuadrada de Chocolate</h5>
       <p class="card-text">Una mezcla de frutas frescas y crema chantilly 
         <br>sobre un suave bizcocho de vainilla ideal para celebraciones.</p>
+        <p class="precio fw-bold">Precio: $45.000 CLP</p>
       <a href="#" class="btn btn-primary" style="background-color: #5d4037; border-color: #5d4037;">Agregar al carrito</a>
     </div>
   </div>
 
-  <div class="card m-4" style="width: 18rem;">
+  <div class="card m-4" style="width: 18rem;" data-precio="40000">
     <img src="https://i.pinimg.com/1200x/4c/09/19/4c0919fc733981b0bdc947b366e22352.jpg" class="card-img-top" alt="torta" height="340px">
     <div class="card-body">
       <h5 class="card-title">Torta Circular de Vainilla</h5>
@@ -93,11 +96,12 @@
         <br>y cubierto con un glaseado dulce perfecto para cualquier ocasión.
         <br>
         <br> </p>
+        <p class="precio fw-bold">Precio: $40.000 CLP </p>
       <a href="#" class="btn btn-primary" style="background-color: #5d4037; border-color: #5d4037;">Agregar al carrito</a>
     </div>
   </div>
 
-  <div class="card m-4" style="width: 18rem;">
+  <div class="card m-4" style="width: 18rem;" data-precio="42000">
     <img src="https://i.pinimg.com/736x/22/b7/30/22b7305c7a1aa7f2778ba86f206df70e.jpg" class="card-img-top" alt="torta" height="340px">
     <div class="card-body">
       <h5 class="card-title">Torta Circular de Manjar</h5>
@@ -106,12 +110,12 @@
         <br>
         <br> 
         <br>
-    </p>
+        <p class="precio fw-bold">Precio: $42.000 CLP </p>  
       <a href="#" class="btn btn-primary" style="background-color: #5d4037; border-color: #5d4037;">Agregar al carrito</a>
     </div>
   </div>
 
-  <div class="card m-4" style="width: 18rem;">
+  <div class="card m-4" style="width: 18rem;" data-precio="5000">
     <img src="https://images.aws.nestle.recipes/original/2024_10_18T11_53_16_badun_images.badun.es_4ed41e942636_mousse_de_chocolate_intenso.jpg" class="card-img-top" alt="Mousse de Chocolate" height="340px">
     <div class="card-body">
       <h5 class="card-title">Mousse de Chocolate</h5>
@@ -120,6 +124,7 @@
         <br>
         <br>
      </p>
+     <p class="precio fw-bold">Precio: $5.000 CLP </p>
       <a href="#" class="btn btn-primary" style="background-color: #5d4037; border-color: #5d4037;">Agregar al carrito</a>
     </div>
   </div>
@@ -164,6 +169,38 @@
     <path d="M8 1a5 5 0 0 0-5 5v1h1a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V6a6 6 0 1 1 12 0v6a2.5 2.5 0 0 1-2.5 2.5H9.366a1 1 0 0 1-.866.5h-1a1 1 0 1 1 0-2h1a1 1 0 0 1 .866.5H11.5A1.5 1.5 0 0 0 13 12h-1a1 1 0 0 1-1-1V8a1 1 0 0 1 1-1h1V6a5 5 0 0 0-5-5"/>
   </svg>
 </div> 
+<div class="modal fade" id="carritoModal" tabindex="-1" aria-labelledby="carritoModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header bg-light">
+        <h5 class="modal-title" id="carritoModalLabel">🛒 Carrito de Compras</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+      </div>
+      <div class="modal-body">
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th>Producto</th>
+              <th>Precio</th>
+              <th>Cantidad</th>
+              <th>Subtotal</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody id="carrito-items">
+            <!-- Productos dinámicos -->
+          </tbody>
+        </table>
+        <h5 class="text-end mt-3">Total: <span id="carrito-total">0</span> CLP</h5>
+      </div>
+      <div class="modal-footer">
+        <button id="vaciarCarrito" class="btn btn-danger">Vaciar Carrito</button>
+        <button id="finalizarCompra" class="btn btn-success">Finalizar Compra</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 
 
 
@@ -201,6 +238,86 @@
     <p class="text-center mb-0">&copy; 2025 Pastelería 1000 Sabores. Todos los derechos reservados.</p>
   </div>
 </footer>
+<script>
+let carrito = [];
+const botonesAgregar = document.querySelectorAll('.agregar-carrito');
+const carritoItems = document.getElementById('carrito-items');
+const carritoTotal = document.getElementById('carrito-total');
+const vaciarCarrito = document.getElementById('vaciarCarrito');
+const finalizarCompra = document.getElementById('finalizarCompra');
+const carritoButton = document.querySelector('.Button-carrito');
+
+carritoButton.addEventListener('click', () => {
+  const modal = new bootstrap.Modal(document.getElementById('carritoModal'));
+  modal.show();
+  renderCarrito();
+});
+
+botonesAgregar.forEach(boton => {
+  boton.addEventListener('click', () => {
+    const card = boton.closest('.card');
+    const nombre = card.querySelector('.card-title').textContent;
+    const precio = parseInt(card.dataset.precio);
+    const productoExistente = carrito.find(p => p.nombre === nombre);
+    if (productoExistente) {
+      productoExistente.cantidad++;
+    } else {
+      carrito.push({ nombre, precio, cantidad: 1 });
+    }
+    renderCarrito();
+  });
+});
+
+function renderCarrito() {
+  carritoItems.innerHTML = '';
+  let total = 0;
+  carrito.forEach((producto, index) => {
+    const subtotal = producto.precio * producto.cantidad;
+    total += subtotal;
+    carritoItems.innerHTML += `
+      <tr>
+        <td>${producto.nombre}</td>
+        <td>$${producto.precio.toLocaleString()} CLP</td>
+        <td>
+          <input type="number" min="1" value="${producto.cantidad}" 
+                 class="form-control form-control-sm" 
+                 onchange="cambiarCantidad(${index}, this.value)">
+        </td>
+        <td>$${subtotal.toLocaleString()} CLP</td>
+        <td>
+          <button class="btn btn-danger btn-sm" onclick="eliminarProducto(${index})">X</button>
+        </td>
+      </tr>
+    `;
+  });
+  carritoTotal.textContent = total.toLocaleString();
+}
+
+function cambiarCantidad(index, nuevaCantidad) {
+  carrito[index].cantidad = parseInt(nuevaCantidad);
+  renderCarrito();
+}
+
+function eliminarProducto(index) {
+  carrito.splice(index, 1);
+  renderCarrito();
+}
+
+vaciarCarrito.addEventListener('click', () => {
+  carrito = [];
+  renderCarrito();
+});
+
+finalizarCompra.addEventListener('click', () => {
+  if (carrito.length === 0) {
+    alert("⚠️ Tu carrito está vacío.");
+  } else {
+    alert("🎉 ¡Gracias por tu compra! Nos pondremos en contacto para coordinar la entrega.");
+    carrito = [];
+    renderCarrito();
+  }
+});
+</script>
 
 </body>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
