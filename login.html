@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <link rel="stylesheet" href="assets/filters.css">
+</head>
+
+<body>
+    
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Iniciar Sesión</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+
+  <div class="container mt-5">
+    <h1 class="text-center mb-4">Iniciar Sesión</h1>
+    <form id="loginForm" class="p-4 bg-white rounded shadow-sm">
+      <div class="mb-3">
+        <label for="loginCorreo" class="form-label">Correo electrónico</label>
+        <input type="email" class="form-control" id="loginCorreo" required>
+      </div>
+      <div class="mb-3">
+        <label for="loginUsuario" class="form-label">Usuario</label>
+        <input type="text" class="form-control" id="loginUsuario" required>
+      </div>
+      <!-- 🔹 Campo de contraseña -->
+      <div class="mb-3">
+        <label for="loginContrasena" class="form-label">Contraseña</label>
+        <input type="password" class="form-control" id="loginContrasena" required>
+      </div>
+      <button type="submit" class="btn btn-primary w-100">Ingresar</button>
+      <div class="text-center mt-3">
+        <a href="registro.html">¿No tienes cuenta? Regístrate aquí</a>
+      </div>
+    </form>
+  </div>
+
+  <script>
+  (function () {
+    const form = document.getElementById('loginForm');
+
+    function cargarUsuarios() {
+      try {
+        const data = localStorage.getItem('usuarios');
+        return data ? JSON.parse(data) : [];
+      } catch (e) {
+        console.error('Error leyendo localStorage:', e);
+        return [];
+      }
+    }
+
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+
+      const correo = document.getElementById('loginCorreo').value.trim();
+      const usuario = document.getElementById('loginUsuario').value.trim();
+      const contrasena = document.getElementById('loginContrasena').value;
+
+      const usuarios = cargarUsuarios();
+
+      // Buscar coincidencia (correo, usuario y contraseña)
+      const encontrado = usuarios.find(u => 
+        u.correo.toLowerCase() === correo.toLowerCase() && 
+        u.usuario.toLowerCase() === usuario.toLowerCase() &&
+        u.contrasena === contrasena
+      );
+
+      if (encontrado) {
+        // Guardamos como usuario actual
+        localStorage.setItem('usuarioActual', JSON.stringify(encontrado));
+        alert(`¡Bienvenido/a ${encontrado.nombre}!`);
+        window.location.href = "pasteleria.html"; // redirige al inicio
+      } else {
+        alert("Datos incorrectos. Verifica correo, usuario o contraseña.");
+      }
+    });
+  })();
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</body>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+</html>

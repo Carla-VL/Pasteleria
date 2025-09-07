@@ -6,22 +6,23 @@
     <title>Registro</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
     <link rel="stylesheet" href="assets/filters.css">
+
 </head>
 <body>
     <h1 class="Registrotitulo">Registro</h1>
 
 <div class="d-flex justify-content-center" style="width: 50%; margin: auto; padding-top: 50px;">
-    <form class="row g-3 needs-validation" novalidate>
+    <form class="row g-3 needs-validation" novalidate id="miFormulario">
     <div class="col-md-4 position-relative">
         <label for="validationTooltip01" class="form-label">Nombre</label>
-        <input type="text" class="form-control" id="validationTooltip01" value="Mark" required>
+        <input type="text" class="form-control" id="validationTooltip01" value="" required>
         <div class="valid-tooltip">
         Looks good!
         </div>
     </div>
     <div class="col-md-4 position-relative">
         <label for="validationTooltip02" class="form-label">Apellido</label>
-        <input type="text" class="form-control" id="validationTooltip02" value="Otto" required>
+        <input type="text" class="form-control" id="validationTooltip02" value="" required>
         <div class="valid-tooltip">
         Looks good!
         </div>
@@ -36,12 +37,33 @@
         </div>
         </div>
     </div>
+    <!-- Fecha de nacimiento -->
+    <div class="col-md-4 position-relative">
+        <label for="fechaNacInput" class="form-label">Fecha de nacimiento</label>
+        <input type="date" class="form-control" id="fechaNacInput" required>
+        <div class="invalid-tooltip">Ingresa tu fecha de nacimiento.</div>
+    </div>
+
+    <!-- Código promocional (opcional) -->
+    <div class="col-md-4 position-relative">
+        <label for="codigoPromoInput" class="form-label">Código promocional</label>
+        <input type="text" class="form-control" id="codigoPromoInput" placeholder="FELICES50">
+        <div class="valid-tooltip">Código válido (opcional).</div>
+    </div>
+
     <div class="col-md-6 position-relative">
         <label for="validationTooltip03" class="form-label">Correo Electronico</label>
-        <input type="text" class="form-control" id="validationTooltip03" required>
+        <input type="text" class="form-control" id="emailInput" required>
         <div class="invalid-tooltip">
         Porfavor ingrese un correo válido.
         </div>
+    <div class="col-md-4 position-relative">
+        <label for="validationTooltip02" class="form-label">Contraseña</label>
+        <input type="text" class="form-control" id="contrasenaInput" value="" required>
+        <div class="valid-tooltip">
+        Looks good!
+        </div>
+    </div>
 
           <div class="col-md-3 position-relative" style="width: auto;">
         <label for="validationTooltip04" class="form-label">Region</label>
@@ -72,7 +94,7 @@
 
        <div class="col-md-6 position-relative">
         <label for="validationTooltip03" class="form-label">Ciudad</label>
-        <input type="text" class="form-control" id="validationTooltip03" required>
+        <input type="text" class="form-control" id="ciudadInput" required>
         <div class="invalid-tooltip">
         Porfavor ingrese una ciudad válida.
         </div>
@@ -92,24 +114,174 @@
     </form>
 </div>
 
+<script>
+(function () {
+  const form = document.getElementById('miFormulario');
 
+  function getSelectedText(selectEl) {
+    const opt = selectEl.options[selectEl.selectedIndex];
+    return opt ? opt.text : '';
+  }
 
+  function cargarUsuarios() {
+    try {
+      const data = localStorage.getItem('usuarios');
+      return data ? JSON.parse(data) : [];
+    } catch (e) {
+      console.error('Error leyendo localStorage:', e);
+      return [];
+    }
+  }
 
+  function guardarUsuarios(arr) {
+    localStorage.setItem('usuarios', JSON.stringify(arr));
+  }
 
+  function calcularEdad(fechaISO) {
+    const hoy = new Date();
+    const fn = new Date(fechaISO);
+    let edad = hoy.getFullYear() - fn.getFullYear();
+    const m = hoy.getMonth() - fn.getMonth();
+    if (m < 0 || (m === 0 && hoy.getDate() < fn.getDate())) edad--;
+    return edad;
+  }
 
+  function esCorreoDuoc(correo) {
+    return /@(?:duoc|duocuc)\.cl$/i.test(correo.trim());
+  }
 
+  function esCumpleHoy(fechaISO) {
+    const hoy = new Date();
+    const fn = new Date(fechaISO);
+    return (hoy.getMonth() === fn.getMonth() && hoy.getDate() === fn.getDate());
+  }
 
+  // (Opcional) Hash de contraseña con SHA-256 (requiere usar await/then)
+  // async function hashSHA256(text) {
+  //   const enc = new TextEncoder().encode(text);
+  //   const buf = await crypto.subtle.digest('SHA-256', enc);
+  //   return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, '0')).join('');
+  // }
 
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+    e.stopPropagation();
 
+    form.classList.add('was-validated');
+    if (!form.checkValidity()) return;
 
+    // Valores base
+    const nombre = document.getElementById('validationTooltip01').value.trim();
+    const apellido = document.getElementById('validationTooltip02').value.trim();
+    const usuario = document.getElementById('validationTooltipUsername').value.trim();
+    const correo = document.getElementById('emailInput').value.trim();
+    const regionSelect = document.getElementById('validationTooltip04');
+    const regionValor = regionSelect.value;
+    const regionTexto = getSelectedText(regionSelect);
+    const ciudad = document.getElementById('ciudadInput').value.trim();
+    const codigoPostal = document.getElementById('validationTooltip05').value.trim();
 
+    const fechaNac = document.getElementById('fechaNacInput').value;
+    const codigoPromo = (document.getElementById('codigoPromoInput').value || '').trim();
+    const contrasena = document.getElementById('contrasenaInput').value; // <— NUEVO
 
+    // Validación correo
+    const regexCorreo = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!regexCorreo.test(correo)) {
+      alert('Por favor, ingresa un correo válido.');
+      return;
+    }
 
+    // Validación contraseña básica
+    if (contrasena.length < 6) {
+      alert('La contraseña debe tener al menos 6 caracteres.');
+      return;
+    }
 
+    // Evitar duplicados (por correo o usuario)
+    const usuarios = cargarUsuarios();
+    const existe = usuarios.find(u =>
+      u.correo.toLowerCase() === correo.toLowerCase() || u.usuario.toLowerCase() === usuario.toLowerCase()
+    );
+    if (existe) {
+      alert('Ya existe una cuenta con ese correo o usuario. Intenta con otros datos.');
+      return;
+    }
 
+    // ---- LÓGICA DE BENEFICIOS ----
+    const edad = calcularEdad(fechaNac);
+    let descuento = 0;
+    let motivoDescuento = null;
 
+    if (edad >= 50) {
+      descuento = 50;
+      motivoDescuento = 'Descuento 50% por ser mayor de 50 años';
+    }
 
+    if (descuento === 0 && codigoPromo.toUpperCase() === 'FELICES50') {
+      descuento = 10;
+      motivoDescuento = 'Descuento 10% de por vida con código FELICES50';
+    }
 
+    const correoEsDuoc = esCorreoDuoc(correo);
+    const cumpleHoy = esCumpleHoy(fechaNac);
+
+    const beneficios = {
+      descuentoAplicable: descuento,
+      motivoDescuento: motivoDescuento,
+      esEstudianteDuoc: correoEsDuoc,
+      tortaGratis: correoEsDuoc && cumpleHoy,
+      mensajeTorta: correoEsDuoc
+        ? (cumpleHoy
+            ? '¡Torta gratis hoy por tu cumpleaños (correo Duoc verificado)!'
+            : 'Torta gratis el día de tu cumpleaños (correo Duoc verificado).')
+        : null
+    };
+
+    // Si quisieras guardar la contraseña hasheada:
+    // hashSHA256(contrasena).then(hash => { ...guardar usando hash... });
+
+    // ---- Construir objeto de usuario ----
+    const nuevoUsuario = {
+      nombre,
+      apellido,
+      usuario,
+      correo,
+      region: { id: regionValor, nombre: regionTexto },
+      ciudad,
+      codigoPostal,
+      fechaNacimiento: fechaNac,
+      codigoPromocional: codigoPromo || null,
+      // ⚠️ Para demo académica guardamos la contraseña en claro:
+      contrasena,
+      beneficios,
+      fechaRegistro: new Date().toISOString()
+    };
+
+    // Guardar
+    usuarios.push(nuevoUsuario);
+    guardarUsuarios(usuarios);
+
+    // Guardar usuario actual para mostrar en index
+    localStorage.setItem('usuarioActual', JSON.stringify(nuevoUsuario));
+
+    // Feedback
+    let resumen = `¡Registro guardado!\n\n`;
+    if (beneficios.descuentoAplicable > 0) {
+      resumen += `✔ ${beneficios.motivoDescuento}\n`;
+    }
+    if (beneficios.esEstudianteDuoc) {
+      resumen += `✔ Correo institucional Duoc detectado.\n`;
+      resumen += `✔ ${beneficios.mensajeTorta}\n`;
+    }
+    alert(resumen);
+
+    // 👉 Redirigir a la página principal (ajusta si tu ruta es distinta)
+    window.location.href = "pasteleria.html";
+  });
+
+})();
+</script>
 
 
 </body>
