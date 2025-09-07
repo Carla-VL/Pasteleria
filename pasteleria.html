@@ -14,7 +14,7 @@
 <h1 class="titulo">Pasteleria Mil Sabores</h1>
 <nav class="navbar navbar-expand-lg bg-custom">
   <div class="container-fluid">
-    <a class="navbar-brand" href="#">
+    <a class="navbar-brand" href="pasteleria.html">
       
     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-house-heart-fill" viewBox="0 0 16 16">
       <path d="M7.293 1.5a1 1 0 0 1 1.414 0L11 3.793V2.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v3.293l2.354 2.353a.5.5 0 0 1-.708.707L8 2.207 1.354 8.853a.5.5 0 1 1-.708-.707z"/>
@@ -44,9 +44,6 @@
         </li>
         <li class="nav-item">
           <a class="nav-link" href="#">Mis Pedidos</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="#">Contáctanos</a>
         </li>
         <li class="nav-item">
           <a class="nav-link" href="#">Nosotros</a>
@@ -247,25 +244,161 @@
 
 
 <script>
+/* ========= UTILIDADES DE SESIÓN ========= */
+function cargarUsuarioActual() {
+  try {
+    const u = localStorage.getItem('usuarioActual');
+    return u ? JSON.parse(u) : null;
+  } catch (e) {
+    console.error('usuarioActual corrupto:', e);
+    return null;
+  }
+}
+
+function obtenerDescuentoUsuario(usuario) {
+  // Devuelve {pct: number, motivo: string|null}
+  if (usuario && usuario.beneficios) {
+    const pct = Number(usuario.beneficios.descuentoAplicable || 0);
+    const motivo = usuario.beneficios.motivoDescuento || null;
+    return { pct, motivo };
+  }
+  return { pct: 0, motivo: null };
+}
+
+function formateaCLP(n) {
+  return n.toLocaleString('es-CL');
+}
+
+function creaBannerBienvenida(usuario) {
+  // Crea (si no existe) un alert arriba de la página
+  let banner = document.getElementById('bienvenidaUsuario');
+  if (!banner) {
+    banner = document.createElement('div');
+    banner.id = 'bienvenidaUsuario';
+    banner.className = 'alert alert-success text-center mt-3';
+    banner.style.marginLeft = 'auto';
+    banner.style.marginRight = 'auto';
+    document.body.prepend(banner); // lo agrega arriba del body
+  }
+
+  const { pct, motivo } = obtenerDescuentoUsuario(usuario);
+
+  banner.innerHTML = `
+    🎉 Bienvenido/a <strong>${usuario.nombre} ${usuario.apellido}</strong>
+    (usuario: <em>${usuario.usuario}</em>)
+    ${pct > 0 ? `<br>Descuento activo: <strong>${pct}%</strong>${motivo ? ` — ${motivo}` : ''}` : ''}
+    ${usuario.beneficios?.tortaGratis ? `<br>🎂 ${usuario.beneficios.mensajeTorta}` : ''}
+    <div class="mt-2">
+      <button id="btnCerrarSesion" class="btn btn-outline-dark btn-sm">Cerrar sesión</button>
+    </div>
+  `;
+
+  // Cerrar sesión
+  document.getElementById('btnCerrarSesion').onclick = () => {
+    localStorage.removeItem('usuarioActual');
+    // Si quieres limpiar también el banner:
+    banner.remove();
+    // (Opcional) Redirigir al login:
+    // window.location.href = "login.html";
+  };
+}
+
+/* ========= CARRITO ========= */
 let carrito = [];
 const botonesAgregar = document.querySelectorAll('.agregar-carrito');
 const carritoItems = document.getElementById('carrito-items');
-const carritoTotal = document.getElementById('carrito-total');
+const carritoTotal = document.getElementById('carrito-total'); // total bruto (sin descuento)
 const vaciarCarrito = document.getElementById('vaciarCarrito');
 const finalizarCompra = document.getElementById('finalizarCompra');
 const carritoButton = document.querySelector('.Button-carrito');
 
-carritoButton.addEventListener('click', () => {
-  const modal = new bootstrap.Modal(document.getElementById('carritoModal'));
-  modal.show();
+// Crear/asegurar líneas de "Descuento" y "Total a pagar" bajo #carrito-total
+function asegurarTotalesExtendidos() {
+  // Buscamos el contenedor padre textual donde está el total actual
+  const parent = carritoTotal?.parentElement;
+  if (!parent) return;
+
+  // Línea de descuento
+  if (!document.getElementById('carrito-descuento')) {
+    const pDesc = document.createElement('p');
+    pDesc.innerHTML = `Descuento: <strong>$<span id="carrito-descuento">0</span> CLP</strong>`;
+    parent.appendChild(pDesc);
+  }
+  // Línea de total final
+  if (!document.getElementById('carrito-total-final')) {
+    const pFinal = document.createElement('p');
+    pFinal.innerHTML = `Total a pagar: <strong>$<span id="carrito-total-final">0</span> CLP</strong>`;
+    parent.appendChild(pFinal);
+  }
+}
+
+function renderCarrito() {
+  carritoItems.innerHTML = '';
+  let total = 0;
+
+  carrito.forEach((producto, index) => {
+    const subtotal = producto.precio * producto.cantidad;
+    total += subtotal;
+    carritoItems.innerHTML += `
+      <tr>
+        <td>${producto.nombre}</td>
+        <td>$${formateaCLP(producto.precio)} CLP</td>
+        <td>
+          <input type="number" min="1" value="${producto.cantidad}"
+                 class="form-control form-control-sm"
+                 onchange="cambiarCantidad(${index}, this.value)">
+        </td>
+        <td>$${formateaCLP(subtotal)} CLP</td>
+        <td>
+          <button class="btn btn-danger btn-sm" onclick="eliminarProducto(${index})">X</button>
+        </td>
+      </tr>
+    `;
+  });
+
+  // Totales y descuento por usuario
+  const usuarioActual = cargarUsuarioActual();
+  const { pct } = obtenerDescuentoUsuario(usuarioActual);
+  const descuentoMonto = Math.round(total * (pct / 100));
+  const totalFinal = Math.max(0, total - descuentoMonto);
+
+  // Mostrar totales
+  if (carritoTotal) carritoTotal.textContent = formateaCLP(total);
+  asegurarTotalesExtendidos();
+  const spanDesc = document.getElementById('carrito-descuento');
+  const spanTotalFinal = document.getElementById('carrito-total-final');
+  if (spanDesc) spanDesc.textContent = formateaCLP(descuentoMonto);
+  if (spanTotalFinal) spanTotalFinal.textContent = formateaCLP(totalFinal);
+}
+
+function cambiarCantidad(index, nuevaCantidad) {
+  carrito[index].cantidad = Math.max(1, parseInt(nuevaCantidad || 1));
   renderCarrito();
-});
+}
+
+function eliminarProducto(index) {
+  carrito.splice(index, 1);
+  renderCarrito();
+}
+
+// Exponer funciones para onchange/onclick inline
+window.cambiarCantidad = cambiarCantidad;
+window.eliminarProducto = eliminarProducto;
+
+// Eventos
+if (carritoButton) {
+  carritoButton.addEventListener('click', () => {
+    const modal = new bootstrap.Modal(document.getElementById('carritoModal'));
+    modal.show();
+    renderCarrito();
+  });
+}
 
 botonesAgregar.forEach(boton => {
   boton.addEventListener('click', () => {
     const card = boton.closest('.card');
     const nombre = card.querySelector('.card-title').textContent;
-    const precio = parseInt(card.dataset.precio);
+    const precio = parseInt(card.dataset.precio); // asegúrate de tener data-precio en la .card
     const productoExistente = carrito.find(p => p.nombre === nombre);
     if (productoExistente) {
       productoExistente.cantidad++;
@@ -276,56 +409,49 @@ botonesAgregar.forEach(boton => {
   });
 });
 
-function renderCarrito() {
-  carritoItems.innerHTML = '';
-  let total = 0;
-  carrito.forEach((producto, index) => {
-    const subtotal = producto.precio * producto.cantidad;
-    total += subtotal;
-    carritoItems.innerHTML += `
-      <tr>
-        <td>${producto.nombre}</td>
-        <td>$${producto.precio.toLocaleString()} CLP</td>
-        <td>
-          <input type="number" min="1" value="${producto.cantidad}" 
-                 class="form-control form-control-sm" 
-                 onchange="cambiarCantidad(${index}, this.value)">
-        </td>
-        <td>$${subtotal.toLocaleString()} CLP</td>
-        <td>
-          <button class="btn btn-danger btn-sm" onclick="eliminarProducto(${index})">X</button>
-        </td>
-      </tr>
-    `;
-  });
-  carritoTotal.textContent = total.toLocaleString();
-}
-
-function cambiarCantidad(index, nuevaCantidad) {
-  carrito[index].cantidad = parseInt(nuevaCantidad);
-  renderCarrito();
-}
-
-function eliminarProducto(index) {
-  carrito.splice(index, 1);
-  renderCarrito();
-}
-
-vaciarCarrito.addEventListener('click', () => {
-  carrito = [];
-  renderCarrito();
-});
-
-finalizarCompra.addEventListener('click', () => {
-  if (carrito.length === 0) {
-    alert("⚠️ Tu carrito está vacío.");
-  } else {
-    alert("🎉 ¡Gracias por tu compra! Nos pondremos en contacto para coordinar la entrega.");
+if (vaciarCarrito) {
+  vaciarCarrito.addEventListener('click', () => {
     carrito = [];
     renderCarrito();
+  });
+}
+
+if (finalizarCompra) {
+  finalizarCompra.addEventListener('click', () => {
+    if (carrito.length === 0) {
+      alert("⚠️ Tu carrito está vacío.");
+      return;
+    }
+
+    // Recalcular totales con descuento para el mensaje final
+    let total = carrito.reduce((acc, p) => acc + p.precio * p.cantidad, 0);
+    const usuarioActual = cargarUsuarioActual();
+    const { pct, motivo } = obtenerDescuentoUsuario(usuarioActual);
+    const descuentoMonto = Math.round(total * (pct / 100));
+    const totalFinal = Math.max(0, total - descuentoMonto);
+
+    let msg = "🎉 ¡Gracias por tu compra!";
+    msg += `\nTotal: $${formateaCLP(total)} CLP`;
+    if (pct > 0) {
+      msg += `\nDescuento (${pct}%${motivo ? ` - ${motivo}` : ''}): -$${formateaCLP(descuentoMonto)} CLP`;
+    }
+    msg += `\nTotal a pagar: $${formateaCLP(totalFinal)} CLP`;
+
+    alert(msg);
+    carrito = [];
+    renderCarrito();
+  });
+}
+
+/* ========= INICIO: mostrar usuario logueado ========= */
+document.addEventListener('DOMContentLoaded', () => {
+  const usuarioActual = cargarUsuarioActual();
+  if (usuarioActual) {
+    creaBannerBienvenida(usuarioActual);
   }
 });
 </script>
+
 
 </body>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
