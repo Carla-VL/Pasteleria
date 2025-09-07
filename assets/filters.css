@@ -30,6 +30,8 @@ body{
 
   text-align: right;
   color: #5d4037;
+
+
 }
 
 .Button-help{
@@ -54,3 +56,8 @@ body{
   color: #5d4037;;
 }
 
+.cards{
+  display: flex;
+  flex-wrap: wrap;    /* se apilan si no cabe */
+  gap: 0.9rem;       /* espacio entre tarjetas */
+}
