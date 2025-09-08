@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pago</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <link rel="stylesheet" href="assets/filters.css">
+</head>
+<body>
+<h1 class="titulo">Pasteleria Mil Sabores</h1>
+<nav class="navbar navbar-expand-lg bg-custom">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="pasteleria.html">
+      
+    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-house-heart-fill" viewBox="0 0 16 16">
+      <path d="M7.293 1.5a1 1 0 0 1 1.414 0L11 3.793V2.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v3.293l2.354 2.353a.5.5 0 0 1-.708.707L8 2.207 1.354 8.853a.5.5 0 1 1-.708-.707z"/>
+      <path d="m14 9.293-6-6-6 6V13.5A1.5 1.5 0 0 0 3.5 15h9a1.5 1.5 0 0 0 1.5-1.5zm-6-.811c1.664-1.673 5.825 1.254 0 5.018-5.825-3.764-1.664-6.691 0-5.018"/>
+    </svg>
+      
+    Inicio</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNavDropdown">
+      <ul class="navbar-nav">
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Productos
+          </a>
+          <ul class="dropdown-menu" id="menuCategorias">
+            <li><a class="dropdown-item categoria-item" data-cat="all" href="#">Todas</a></li>
+            <li><a class="dropdown-item" data-cat="Tortas Cuadradas" href="#">Tortas Cuadradas</a></li>
+            <li><a class="dropdown-item" data-cat="Tortas Circulares" href="#">Tortas Circulares</a></li>
+            <li><a class="dropdown-item" data-cat="Postres Individuales" href="#">Postres Individuales</a></li>
+            <li><a class="dropdown-item" data-cat="Productos Sin Azúcar" href="#">Productos Sin Azúcar</a></li>
+            <li><a class="dropdown-item" data-cat="Pastelería Tradicional" href="#">Pastelería Tradicional</a></li>
+            <li><a class="dropdown-item" data-cat="Productos sin gluten" href="#">Productos sin gluten</a></li>
+            <li><a class="dropdown-item" data-cat="Productos Vegana" href="#">Productos Vegana</a></li>
+            <li><a class="dropdown-item" data-cat="Tortas Especiales" href="#">Tortas Especiales</a></li>
+          </ul>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="nosotros.html">Nosotros</a>
+        </li>
+        <li class="nav-item">
+        <a class="nav-link btn btn-outline-primary" href="registro.html">Registro</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="login.html">Iniciar Sesión</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<div class="Button-carrito m-3">
+  <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="currentColor" class="bi bi-basket-fill" viewBox="0 0 16 16">
+    <path d="M5.071 1.243a.5.5 0 0 1 .858.514L3.383 6h9.234L10.07 1.757a.5.5 0 1 1 .858-.514L13.783 6H15.5a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-.5.5H15v5a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V9H.5a.5.5 0 0 1-.5-.5v-2A.5.5 0 0 1 .5 6h1.717zM3.5 10.5a.5.5 0 1 0-1 0v3a.5.5 0 0 0 1 0zm2.5 0a.5.5 0 1 0-1 0v3a.5.5 0 0 0 1 0zm2.5 0a.5.5 0 1 0-1 0v3a.5.5 0 0 0 1 0zm2.5 0a.5.5 0 1 0-1 0v3a.5.5 0 0 0 1 0zm2.5 0a.5.5 0 1 0-1 0v3a.5.5 0 0 0 1 0z"/>
+  </svg>
+</div>
+
+<h1 class="Pagos m-4">Pagos</h1>
+<h3 class="text-center" id="montoTotal" style="color:#5d4037;"></h3>
+
+
+
+
+
+
+
+
+
+
+    <form class="row g-3" style="width: 50%; margin: auto;">
+  <div class="col-md-6">
+    <label for="inputEmail4" class="form-label" style="color: #5d4037;">Email</label>
+    <input type="email" class="form-control" id="inputEmail4">
+  </div>
+  <div class="col-md-6">
+    <label for="inputPassword4" class="form-label" style="color: #5d4037;">Contraseña</label>
+    <input type="password" class="form-control" id="inputPassword4">
+  </div>
+  <div class="col-12">
+    <label for="inputAddress" class="form-label" style="color: #5d4037;">Direccion</label>
+    <input type="text" class="form-control" id="inputAddress" placeholder="Antonio varas 666">
+  </div>
+  <div class="col-12">
+    <label for="inputAddress2" class="form-label" style="color: #5d4037;">Descripcion (opcional)</label>
+    <input type="text" class="form-control" id="inputAddress2" placeholder="Casa, Departamento, etc">
+  </div>
+ 
+  <div class="col-md-4" style="width: auto;">
+    <label for="inputState" class="form-label" style="color: #5d4037;">Region</label>
+    <select id="inputState" class="form-select">
+      <option selected>Seleccione Region</option>
+        <option value="1">Región de Arica y Parinacota</option>
+        <option value="2">Región de Tarapacá </option>
+        <option value="3">Región de Antofagasta</option>
+        <option value="4">Región de Atacama</option>
+        <option value="5">Región de Coquimbo</option>
+        <option value="6">Región de Valparaíso</option>
+        <option value="7">Región Metropolitana de Santiago</option>
+        <option value="8">Región del Libertador General Bernardo O'Higgins</option>
+        <option value="9">Región del Maule</option>
+        <option value="10">Región de Ñuble</option>
+        <option value="11">Región del Biobío</option>
+        <option value="12">Región de La Araucanía</option>
+        <option value="13">Región de Los Ríos</option>
+        <option value="14">Región de Los Lagos</option>
+        <option value="15">Región de Aysén del General Carlos Ibáñez del Campo</option>
+        <option value="16">Región de Magallanes y la Antártica Chilena</option>
+    </select>
+  </div>
+   <div class="col-md-6">
+    <label for="inputCity" class="form-label" style="color: #5d4037;">Comuna</label>
+    <input type="text" class="form-control" id="inputCity">
+  </div>
+  <div class="col-md-2">
+    <label for="inputZip" class="form-label" style="color: #5d4037;">Codigo Postal</label>
+    <input type="text" class="form-control" id="inputZip">
+  </div>
+  <div class="col-12">
+    <div class="form-check">
+      <input class="form-check-input" type="radio" name="pagomedio" id="debito" >
+      <label class="form-check-label" for="debito">
+        Débito
+      </label>
+    </div>
+  </div>
+    <div class="col-12">
+    <div class="form-check">
+      <input class="form-check-input" type="radio" name="pagomedio"id="credito" >
+      <label class="form-check-label" for="credito">
+        Crédito
+      </label>
+    </div>
+  </div>
+  <div class="col-12">
+    <button type="submit" class="btn btn-primary" style="background-color: #5d4037; border-color: #5d4037;">Finalizar Compra</button>
+  </div>
+
+</form>
+<script>
+  // Leer el total desde la URL
+  const params = new URLSearchParams(window.location.search);
+  const total = params.get("total");
+
+  // Mostrar el total si existe
+  if (total) {
+    document.getElementById("montoTotal").textContent = "Total a pagar: $" + Number(total).toLocaleString("es-CL");
+  }
+
+  // Capturar formulario
+  const form = document.getElementById("formPago");
+  const mensajeFinal = document.getElementById("mensajeFinal");
+
+  form.addEventListener("submit", function (event) {
+    event.preventDefault(); // evita recargar la página
+
+    // Validaciones básicas
+    const email = document.getElementById("inputEmail4").value.trim();
+    const password = document.getElementById("inputPassword4").value.trim();
+    const direccion = document.getElementById("inputAddress").value.trim();
+    const region = document.getElementById("inputState").value.trim();
+    const comuna = document.getElementById("inputCity").value.trim();
+    const medioPagoSeleccionado = document.querySelector('input[name="pagomedio"]:checked');
+
+    if (!email || !password || !direccion || !region || !comuna || !medioPagoSeleccionado) {
+      mensajeFinal.textContent = "⚠️ Por favor completa todos los campos obligatorios.";
+      mensajeFinal.style.color = "red";
+      return;
+    }
+
+    // Guardar la información en un objeto
+    const datosCompra = {
+      email,
+      direccion,
+      descripcion: document.getElementById("inputAddress2").value.trim(),
+      region,
+      comuna,
+      codigoPostal: document.getElementById("inputZip").value.trim(),
+      medioPago: medioPagoSeleccionado.value,
+      total: total || 0
+    };
+
+    // Guardar en localStorage
+    localStorage.setItem("ultimaCompra", JSON.stringify(datosCompra));
+
+    // Mostrar mensaje de confirmación
+    mensajeFinal.textContent = "✅ Compra finalizada. ¡Gracias por tu pedido!";
+    mensajeFinal.style.color = "green";
+
+    form.reset();
+  });
+</script>
+
+</body>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+</html>

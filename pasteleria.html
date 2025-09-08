@@ -44,9 +44,6 @@
           </ul>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="#">Mis Pedidos</a>
-        </li>
-        <li class="nav-item">
           <a class="nav-link" href="nosotros.html">Nosotros</a>
         </li>
         <li class="nav-item">
@@ -344,7 +341,7 @@
       </div>
       <div class="modal-footer">
         <button id="vaciarCarrito" class="btn btn-danger">Vaciar Carrito</button>
-        <button id="finalizarCompra" class="btn btn-success">Finalizar Compra</button>
+        <button id="finalizarCompra" href="Pago.html" class="btn btn-success">Finalizar Compra</button>
       </div>
     </div>
   </div>
@@ -402,7 +399,6 @@ function cargarUsuarioActual() {
 }
 
 function obtenerDescuentoUsuario(usuario) {
-  // Devuelve {pct: number, motivo: string|null}
   if (usuario && usuario.beneficios) {
     const pct = Number(usuario.beneficios.descuentoAplicable || 0);
     const motivo = usuario.beneficios.motivoDescuento || null;
@@ -416,7 +412,6 @@ function formateaCLP(n) {
 }
 
 function creaBannerBienvenida(usuario) {
-  // Crea (si no existe) un alert arriba de la página
   let banner = document.getElementById('bienvenidaUsuario');
   if (!banner) {
     banner = document.createElement('div');
@@ -424,7 +419,7 @@ function creaBannerBienvenida(usuario) {
     banner.className = 'alert alert-success text-center mt-3';
     banner.style.marginLeft = 'auto';
     banner.style.marginRight = 'auto';
-    document.body.prepend(banner); // lo agrega arriba del body
+    document.body.prepend(banner);
   }
 
   const { pct, motivo } = obtenerDescuentoUsuario(usuario);
@@ -439,38 +434,34 @@ function creaBannerBienvenida(usuario) {
     </div>
   `;
 
-  // Cerrar sesión
   document.getElementById('btnCerrarSesion').onclick = () => {
     localStorage.removeItem('usuarioActual');
-    // Si quieres limpiar también el banner:
     banner.remove();
-    // (Opcional) Redirigir al login:
-    // window.location.href = "login.html";
   };
 }
 
 /* ========= CARRITO ========= */
-let carrito = [];
+let carrito = JSON.parse(localStorage.getItem("carrito")) || [];
 const botonesAgregar = document.querySelectorAll('.agregar-carrito');
 const carritoItems = document.getElementById('carrito-items');
-const carritoTotal = document.getElementById('carrito-total'); // total bruto (sin descuento)
+const carritoTotal = document.getElementById('carrito-total');
 const vaciarCarrito = document.getElementById('vaciarCarrito');
 const finalizarCompra = document.getElementById('finalizarCompra');
 const carritoButton = document.querySelector('.Button-carrito');
 
-// Crear/asegurar líneas de "Descuento" y "Total a pagar" bajo #carrito-total
+function guardarCarrito() {
+  localStorage.setItem("carrito", JSON.stringify(carrito));
+}
+
 function asegurarTotalesExtendidos() {
-  // Buscamos el contenedor padre textual donde está el total actual
   const parent = carritoTotal?.parentElement;
   if (!parent) return;
 
-  // Línea de descuento
   if (!document.getElementById('carrito-descuento')) {
     const pDesc = document.createElement('p');
     pDesc.innerHTML = `Descuento: <strong>$<span id="carrito-descuento">0</span> CLP</strong>`;
     parent.appendChild(pDesc);
   }
-  // Línea de total final
   if (!document.getElementById('carrito-total-final')) {
     const pFinal = document.createElement('p');
     pFinal.innerHTML = `Total a pagar: <strong>$<span id="carrito-total-final">0</span> CLP</strong>`;
@@ -502,19 +493,19 @@ function renderCarrito() {
     `;
   });
 
-  // Totales y descuento por usuario
   const usuarioActual = cargarUsuarioActual();
   const { pct } = obtenerDescuentoUsuario(usuarioActual);
   const descuentoMonto = Math.round(total * (pct / 100));
   const totalFinal = Math.max(0, total - descuentoMonto);
 
-  // Mostrar totales
   if (carritoTotal) carritoTotal.textContent = formateaCLP(total);
   asegurarTotalesExtendidos();
   const spanDesc = document.getElementById('carrito-descuento');
   const spanTotalFinal = document.getElementById('carrito-total-final');
   if (spanDesc) spanDesc.textContent = formateaCLP(descuentoMonto);
   if (spanTotalFinal) spanTotalFinal.textContent = formateaCLP(totalFinal);
+
+  guardarCarrito();
 }
 
 function cambiarCantidad(index, nuevaCantidad) {
@@ -527,11 +518,9 @@ function eliminarProducto(index) {
   renderCarrito();
 }
 
-// Exponer funciones para onchange/onclick inline
 window.cambiarCantidad = cambiarCantidad;
 window.eliminarProducto = eliminarProducto;
 
-// Eventos
 if (carritoButton) {
   carritoButton.addEventListener('click', () => {
     const modal = new bootstrap.Modal(document.getElementById('carritoModal'));
@@ -544,7 +533,7 @@ botonesAgregar.forEach(boton => {
   boton.addEventListener('click', () => {
     const card = boton.closest('.card');
     const nombre = card.querySelector('.card-title').textContent;
-    const precio = parseInt(card.dataset.precio); // asegúrate de tener data-precio en la .card
+    const precio = parseInt(card.dataset.precio);
     const productoExistente = carrito.find(p => p.nombre === nombre);
     if (productoExistente) {
       productoExistente.cantidad++;
@@ -568,48 +557,32 @@ if (finalizarCompra) {
       alert("⚠️ Tu carrito está vacío.");
       return;
     }
-
-    // Recalcular totales con descuento para el mensaje final
     let total = carrito.reduce((acc, p) => acc + p.precio * p.cantidad, 0);
     const usuarioActual = cargarUsuarioActual();
-    const { pct, motivo } = obtenerDescuentoUsuario(usuarioActual);
+    const { pct } = obtenerDescuentoUsuario(usuarioActual);
     const descuentoMonto = Math.round(total * (pct / 100));
     const totalFinal = Math.max(0, total - descuentoMonto);
-
-    let msg = "🎉 ¡Gracias por tu compra!";
-    msg += `\nTotal: $${formateaCLP(total)} CLP`;
-    if (pct > 0) {
-      msg += `\nDescuento (${pct}%${motivo ? ` - ${motivo}` : ''}): -$${formateaCLP(descuentoMonto)} CLP`;
-    }
-    msg += `\nTotal a pagar: $${formateaCLP(totalFinal)} CLP`;
-
-    alert(msg);
-    carrito = [];
-    renderCarrito();
+    window.location.href = `pago.html?total=${totalFinal}`;
   });
 }
 
-/* ========= INICIO: mostrar usuario logueado ========= */
+/* ========= INICIO ========= */
 document.addEventListener('DOMContentLoaded', () => {
   const usuarioActual = cargarUsuarioActual();
   if (usuarioActual) {
     creaBannerBienvenida(usuarioActual);
   }
+  renderCarrito();
 });
 
-
-
-// === Filtro por categorías (funciona con tu dropdown de Bootstrap tal cual) ===
+/* ========= FILTRO ========= */
 document.addEventListener('DOMContentLoaded', function () {
-  // Menú de Productos dentro del navbar
   const menu = document.querySelector('#navbarNavDropdown .dropdown-menu');
   if (!menu) return;
 
-  // Todas las cards de productos (solo las que estén dentro del contenedor .cards)
   const cards = document.querySelectorAll('.cards .card');
   const toggle = document.querySelector('#navbarNavDropdown .dropdown-toggle');
 
-  // Normaliza texto: minúsculas y sin tildes para comparar
   const norm = s => (s || '')
     .toLowerCase()
     .normalize('NFD')
@@ -620,44 +593,37 @@ document.addEventListener('DOMContentLoaded', function () {
     const catNorm = norm(catTexto);
     cards.forEach(card => {
       const c = norm(card.dataset.categoria || '');
-      // “Todas” o “all” muestran todo
       const mostrarTodo = (catNorm === '' || catNorm === 'todas' || catNorm === 'all');
       const ocultar = !mostrarTodo && c !== catNorm;
-      card.classList.toggle('d-none', ocultar); // utilitario Bootstrap
+      card.classList.toggle('d-none', ocultar);
     });
 
-    // Cambia el texto del botón del dropdown (opcional)
     if (toggle) {
       toggle.textContent = (catNorm === '' || catNorm === 'todas' || catNorm === 'all')
         ? 'Productos'
         : `Productos · ${catTexto}`;
     }
 
-    // Cierra el dropdown con la API de Bootstrap (si está disponible)
     if (toggle && window.bootstrap) {
       bootstrap.Dropdown.getOrCreateInstance(toggle).hide();
     }
 
-    // Scroll a la sección de productos
     const titulo = document.querySelector('h1.Principal');
     if (titulo) titulo.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
 
-  // Delegación de eventos: sirve con tu HTML actual (sin data-cat)
   menu.addEventListener('click', (e) => {
     const a = e.target.closest('a.dropdown-item');
     if (!a) return;
     e.preventDefault();
-    const catTexto = a.dataset.cat || a.textContent; // usa data-cat si lo agregas, o el texto visible
+    const catTexto = a.dataset.cat || a.textContent;
     filtrar(catTexto);
   });
 
-  // Al cargar: mostrar todas
   filtrar('todas');
 });
-
-
 </script>
+
 
 
 </body>
