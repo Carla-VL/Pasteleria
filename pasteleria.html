@@ -31,22 +31,23 @@
           <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
             Productos
           </a>
-          <ul class="dropdown-menu">
-            <li><a class="dropdown-item" href="#">Tortas Cuadradas</a></li>
-            <li><a class="dropdown-item" href="#">Tortas Circulares</a></li>
-            <li><a class="dropdown-item" href="#">Postres Individuales</a></li>
-            <li><a class="dropdown-item" href="#">Productos Sin Azúcar</a></li>
-            <li><a class="dropdown-item" href="#">Pastelería Tradicional</a></li>
-            <li><a class="dropdown-item" href="#">Productos sin gluten</a></li>
-            <li><a class="dropdown-item" href="#">Productos Vegana</a></li>
-            <li><a class="dropdown-item" href="#">Tortas Especiales</a></li>
+          <ul class="dropdown-menu" id="menuCategorias">
+            <li><a class="dropdown-item categoria-item" data-cat="all" href="#">Todas</a></li>
+            <li><a class="dropdown-item" data-cat="Tortas Cuadradas" href="#">Tortas Cuadradas</a></li>
+            <li><a class="dropdown-item" data-cat="Tortas Circulares" href="#">Tortas Circulares</a></li>
+            <li><a class="dropdown-item" data-cat="Postres Individuales" href="#">Postres Individuales</a></li>
+            <li><a class="dropdown-item" data-cat="Productos Sin Azúcar" href="#">Productos Sin Azúcar</a></li>
+            <li><a class="dropdown-item" data-cat="Pastelería Tradicional" href="#">Pastelería Tradicional</a></li>
+            <li><a class="dropdown-item" data-cat="Productos sin gluten" href="#">Productos sin gluten</a></li>
+            <li><a class="dropdown-item" data-cat="Productos Vegana" href="#">Productos Vegana</a></li>
+            <li><a class="dropdown-item" data-cat="Tortas Especiales" href="#">Tortas Especiales</a></li>
           </ul>
         </li>
         <li class="nav-item">
           <a class="nav-link" href="#">Mis Pedidos</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="#">Nosotros</a>
+          <a class="nav-link" href="nosotros.html">Nosotros</a>
         </li>
         <li class="nav-item">
         <a class="nav-link btn btn-outline-primary" href="registro.html">Registro</a>
@@ -246,7 +247,7 @@
   </div>
 
 
-  <div class="card m-4" style="width: 18rem;" data-precio="55000" data-categoria="Especiales">
+  <div class="card m-4" style="width: 18rem;" data-precio="55000" data-categoria="Tortas Especiales">
       <img src="https://i.pinimg.com/736x/8a/b1/b9/8ab1b9e788d8a27585f43d2c8f3a4773.jpg" class="card-img-top" alt="torta" height="340px">
       <div class="card-body">
         <h5 class="card-title">Torta Especial de Cumpleaños</h5>
@@ -260,7 +261,7 @@
   </div>
 
 
-  <div class="card m-4" style="width: 18rem;" data-precio="60000" data-categoria="Especiales">
+  <div class="card m-4" style="width: 18rem;" data-precio="60000" data-categoria="Tortas Especiales">
       <img src="https://i.pinimg.com/736x/cf/2a/0a/cf2a0a6e1f8ed22ef6f06f4c5cf4198d.jpg" class="card-img-top" alt="torta" height="340px">
       <div class="card-body">
         <h5 class="card-title">Torta Especial de Boda</h5>
@@ -595,6 +596,67 @@ document.addEventListener('DOMContentLoaded', () => {
     creaBannerBienvenida(usuarioActual);
   }
 });
+
+
+
+// === Filtro por categorías (funciona con tu dropdown de Bootstrap tal cual) ===
+document.addEventListener('DOMContentLoaded', function () {
+  // Menú de Productos dentro del navbar
+  const menu = document.querySelector('#navbarNavDropdown .dropdown-menu');
+  if (!menu) return;
+
+  // Todas las cards de productos (solo las que estén dentro del contenedor .cards)
+  const cards = document.querySelectorAll('.cards .card');
+  const toggle = document.querySelector('#navbarNavDropdown .dropdown-toggle');
+
+  // Normaliza texto: minúsculas y sin tildes para comparar
+  const norm = s => (s || '')
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .trim();
+
+  function filtrar(catTexto) {
+    const catNorm = norm(catTexto);
+    cards.forEach(card => {
+      const c = norm(card.dataset.categoria || '');
+      // “Todas” o “all” muestran todo
+      const mostrarTodo = (catNorm === '' || catNorm === 'todas' || catNorm === 'all');
+      const ocultar = !mostrarTodo && c !== catNorm;
+      card.classList.toggle('d-none', ocultar); // utilitario Bootstrap
+    });
+
+    // Cambia el texto del botón del dropdown (opcional)
+    if (toggle) {
+      toggle.textContent = (catNorm === '' || catNorm === 'todas' || catNorm === 'all')
+        ? 'Productos'
+        : `Productos · ${catTexto}`;
+    }
+
+    // Cierra el dropdown con la API de Bootstrap (si está disponible)
+    if (toggle && window.bootstrap) {
+      bootstrap.Dropdown.getOrCreateInstance(toggle).hide();
+    }
+
+    // Scroll a la sección de productos
+    const titulo = document.querySelector('h1.Principal');
+    if (titulo) titulo.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  // Delegación de eventos: sirve con tu HTML actual (sin data-cat)
+  menu.addEventListener('click', (e) => {
+    const a = e.target.closest('a.dropdown-item');
+    if (!a) return;
+    e.preventDefault();
+    const catTexto = a.dataset.cat || a.textContent; // usa data-cat si lo agregas, o el texto visible
+    filtrar(catTexto);
+  });
+
+  // Al cargar: mostrar todas
+  filtrar('todas');
+});
+
+
 </script>
 
 

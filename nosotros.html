@@ -7,9 +7,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
     <link rel="stylesheet" href="assets/filters.css">
 </head>
-
 <body>
-
 <h1 class="titulo">Pasteleria Mil Sabores</h1>
 <nav class="navbar navbar-expand-lg bg-custom">
   <div class="container-fluid">
@@ -66,28 +64,45 @@
 </div>
 
 
-<div class="container mt-5">
-<h1 class="text-center mb-4" style="color: #5d4037; font-family: 'Lato', sans-serif; font-style: normal;">Iniciar Sesión</h1>
-<form id="loginForm" class="p-4 bg-white rounded shadow-sm">
-    <div class="mb-3" style="color: #5d4037; font-family: 'Lato', sans-serif; font-style: normal;">
-    <label for="loginCorreo" class="form-label" >Correo electrónico</label>
-    <input type="email" class="form-control" id="loginCorreo" required>
+<h1 class="nuestratienda">Nuestra Tienda</h1>
+
+<BR></BR>
+<div class="card mb-3" style="max-width: 75%;">
+  <div class="row-g-0">
+    <div class="col-md-4" style="width: 21%;">
+      <img src="https://i.pinimg.com/1200x/3a/71/cf/3a71cf107b5aee4c6a0a687cf0b6fc7e.jpg" class="img-fluid rounded-start" style="object-fit: cover;" alt="Pastelería Mil Sabores">
     </div>
-    <div class="mb-3" style="color: #5d4037; font-family: 'Lato', sans-serif; font-style: normal;">
-    <label for="loginUsuario" class="form-label">Usuario</label>
-    <input type="text" class="form-control" id="loginUsuario" required>
+    <div class="col-md-8" style="width: auto;">
+      <div class="card-body">
+        <h5 class="card-title">Mil Sabores</h5>
+        <p class="card-text">La Pastelería 1000 Sabores nació hace cinco décadas con el sueño de convertirse en un referente de la repostería chilena. Desde sus inicios, 
+                            <br>se distinguió por combinar recetas tradicionales con innovaciones creativas, ofreciendo productos que rápidamente conquistaron el paladar de sus clientes.
+                            <br>
+                            <br>
+                            Uno de los hitos más importantes en su trayectoria ocurrió en 1995, cuando la pastelería participó en la creación de la torta más grande del mundo, 
+                            <br> un evento que le permitió formar parte del Récord Guinness. Este logro no solo la hizo conocida a nivel nacional, sino que 
+                            <br> también la posicionó como un símbolo de excelencia y orgullo para la repostería chilena.
+                            <br>
+                            <br>
+                            A lo largo de los años, la empresa ha mantenido un fuerte compromiso con la calidad, la tradición y la innovación, adaptándose a las nuevas 
+                            <br>tendencias del mercado. Su propuesta ha sido siempre entregar un producto fresco, con sabores auténticos y elaborados con dedicación artesanal.
+                            <br>
+                            <br>
+                            Hoy, al cumplir 50 años de historia, Pastelería 1000 Sabores celebra su legado y al mismo tiempo mira hacia el futuro. Consciente de los cambios
+                            <br> en los hábitos de consumo y la importancia del comercio digital, la pastelería busca renovar su sistema de ventas online. Su objetivo es ofrecer 
+                            <br>a los clientes una experiencia de compra moderna, ágil y accesible, manteniendo intacta la esencia que la ha acompañado durante medio siglo.
+                            <br>
+                            <br>
+                            De esta manera, Pastelería 1000 Sabores continúa consolidándose como un ícono de la repostería en Chile, 
+                            <br>uniendo tradición y tecnología para seguir endulzando generaciones.</p>
+        <p class="card-text"><small class="text-body-secondary">Actualizado 2025</small></p>
+      </div>
     </div>
-    <!-- 🔹 Campo de contraseña -->
-    <div class="mb-3" style="color: #5d4037; font-family: 'Lato', sans-serif; font-style: normal;">
-    <label for="loginContrasena" class="form-label">Contraseña</label>
-    <input type="password" class="form-control" id="loginContrasena" required>
-    </div>
-    <button type="submit" class="btn btn-primary w-100" style="background-color: #5d4037; border-color: #5d4037;">Ingresar</button>
-    <div class="text-center mt-3">
-    <a href="registro.html" style="color: #5d4037;">¿No tienes cuenta? Regístrate aquí</a>
-    </div>
-</form>
+  </div>
 </div>
+
+<BR></BR>
+
 
 <footer class="footer">
   <div class="container py-4">
@@ -122,49 +137,8 @@
 </footer>
 
 
-  <script>
-  (function () {
-    const form = document.getElementById('loginForm');
-
-    function cargarUsuarios() {
-      try {
-        const data = localStorage.getItem('usuarios');
-        return data ? JSON.parse(data) : [];
-      } catch (e) {
-        console.error('Error leyendo localStorage:', e);
-        return [];
-      }
-    }
-
-    form.addEventListener('submit', function (e) {
-      e.preventDefault();
-
-      const correo = document.getElementById('loginCorreo').value.trim();
-      const usuario = document.getElementById('loginUsuario').value.trim();
-      const contrasena = document.getElementById('loginContrasena').value;
-
-      const usuarios = cargarUsuarios();
-
-      // Buscar coincidencia (correo, usuario y contraseña)
-      const encontrado = usuarios.find(u => 
-        u.correo.toLowerCase() === correo.toLowerCase() && 
-        u.usuario.toLowerCase() === usuario.toLowerCase() &&
-        u.contrasena === contrasena
-      );
-
-      if (encontrado) {
-        // Guardamos como usuario actual
-        localStorage.setItem('usuarioActual', JSON.stringify(encontrado));
-        alert(`¡Bienvenido/a ${encontrado.nombre}!`);
-        window.location.href = "pasteleria.html"; // redirige al inicio
-      } else {
-        alert("Datos incorrectos. Verifica correo, usuario o contraseña.");
-      }
-    });
-  })();
-  </script>
-
-
+    
 </body>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+
 </html>
